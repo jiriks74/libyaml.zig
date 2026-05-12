@@ -20,19 +20,22 @@ pub fn build(b: *Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const libyaml = b.addStaticLibrary(.{
+    const libyaml = b.addLibrary(.{
         .name = "yaml",
-        .target = target,
-        .optimize = optimize,
-        .link_libc = true,
+        .linkage = .static,
+        .root_module = b.createModule(.{
+            .target = target,
+            .optimize = optimize,
+            .link_libc = true,
+        })
     });
     libyaml.root_module.addCMacro("YAML_VERSION_MAJOR", "0");
     libyaml.root_module.addCMacro("YAML_VERSION_MINOR", "2");
     libyaml.root_module.addCMacro("YAML_VERSION_PATCH", "5");
     libyaml.root_module.addCMacro("YAML_VERSION_STRING", "\"0.2.5\"");
     libyaml.root_module.addCMacro("YAML_DECLARE_STATIC", "1");
-    libyaml.addIncludePath(b.path("include"));
-    libyaml.addCSourceFiles(.{
+    libyaml.root_module.addIncludePath(b.path("include"));
+    libyaml.root_module.addCSourceFiles(.{
         .files = &.{
             "src/api.c",
             "src/dumper.c",

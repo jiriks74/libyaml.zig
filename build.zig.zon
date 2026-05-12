@@ -1,5 +1,6 @@
 .{
-    .name = "libyaml",
+    .name = .libyaml,
+    .fingerprint = 0xd606f5c81360a411,
     .version = "0.2.5",
     .paths = .{
         "build.zig",
